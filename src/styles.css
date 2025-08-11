@@ -1,0 +1,29 @@
+
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: radial-gradient(1000px 700px at 50% -10%, #182032, #0a0c12); color:#dfe7f1; }
+h1 { margin: 0.25rem 0; font-family: 'Bangers', 'Permanent Marker', cursive; font-size: 3rem; letter-spacing: 1px; font-weight: 400; }
+.app { display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px; }
+.controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.select, .checkbox { font-size: 14px; }
+.panel { opacity:.9 }
+.canvas-frame { border:1px solid rgba(128,216,255,.35); border-radius:16px; overflow:hidden; box-shadow: 0 10px 24px rgba(0,0,0,.45); }
+small.hint { opacity:.7 }
+.bad { color:#ff8585 }
+
+/* Responsive sizing: maintain GAME_W:GAME_H aspect (960:720 => 4:3) and fit within viewport */
+.canvas-frame {
+	position: relative;
+	/* React sets explicit width/height; aspect-ratio is a fallback */
+	aspect-ratio: 4 / 3;
+}
+/* Let Phaser's canvas fill the container */
+.canvas-frame canvas {
+	width: 100% !important;
+	height: 100% !important;
+	display: block;
+}
+/* On very small screens, reduce outer padding/margins */
+@media (max-width: 480px) {
+	.app { padding: 8px; }
+}
