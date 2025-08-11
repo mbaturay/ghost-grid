@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import pSprite2Url from "../images/PSprite2.png";
 import gSpriteUrl from "../images/GSprite.png";
+import gSprite2Url from "../images/GSprite2.png";
+import gSprite3Url from "../images/GSprite3.png";
+import gSprite4Url from "../images/GSprite4.png";
 import powerUrl from "../images/power.png";
 
 /**
@@ -216,8 +219,11 @@ export default function App() {
         preload() {
           // Player sprite sheet: 3 frames laid out horizontally, 48x48 each (no gaps)
           this.load.spritesheet('psprite', pSprite2Url, { frameWidth: 48, frameHeight: 48 });
-          // Ghost sprite sheet: frames 56x56 with 1px gap between frames
-          this.load.spritesheet('gsprite', gSpriteUrl, { frameWidth: 56, frameHeight: 56, margin: 0, spacing: 1 });
+          // Ghost sprite sheets: frames 56x56 with 1px gap between frames (4 color variants)
+          this.load.spritesheet('gsprite1', gSpriteUrl, { frameWidth: 56, frameHeight: 56, margin: 0, spacing: 1 });
+          this.load.spritesheet('gsprite2', gSprite2Url, { frameWidth: 56, frameHeight: 56, margin: 0, spacing: 1 });
+          this.load.spritesheet('gsprite3', gSprite3Url, { frameWidth: 56, frameHeight: 56, margin: 0, spacing: 1 });
+          this.load.spritesheet('gsprite4', gSprite4Url, { frameWidth: 56, frameHeight: 56, margin: 0, spacing: 1 });
           // Power icon for stamina HUD
           this.load.image('power', powerUrl);
         }
@@ -274,22 +280,31 @@ export default function App() {
               repeat: -1
             });
           }
-          if (!this.anims.exists('gsprite-walk')) {
-            this.anims.create({
-              key: 'gsprite-walk',
-              frames: [
-                { key: 'gsprite', frame: 0 },
-                { key: 'gsprite', frame: 1 },
-                { key: 'gsprite', frame: 2 },
-                { key: 'gsprite', frame: 1 }
-              ],
-              frameRate: 8,
-              repeat: -1
-            });
+          // Create per-variant ghost animations if they don't exist
+          for (const key of ['gsprite1','gsprite2','gsprite3','gsprite4']) {
+            const animKey = `${key}-walk`;
+            if (!this.anims.exists(animKey)) {
+              this.anims.create({
+                key: animKey,
+                frames: [
+                  { key, frame: 0 },
+                  { key, frame: 1 },
+                  { key, frame: 2 },
+                  { key, frame: 1 }
+                ],
+                frameRate: 8,
+                repeat: -1
+              });
+            }
           }
           this.resetLevel(true);
           this.input.keyboard.on("keydown", (e) => this.onKey(e, true));
           this.input.keyboard.on("keyup", (e) => this.onKey(e, false));
+        }
+        // Choose ghost sheet based on level: every 3 levels cycle 1->2->3->4->1...
+        currentGhostTexKey() {
+          const idx = Math.floor((this.level - 1) / 3) % 4; // 0..3
+          return ['gsprite1','gsprite2','gsprite3','gsprite4'][idx];
         }
         onKey(e, down) {
           // Reverse-only control: on key down, set direction; key up does not stop motion
@@ -361,9 +376,10 @@ export default function App() {
             const bottomBound = this.floorY(0);
             const span = Math.max(1, bottomBound - topBound);
             const spawnY = topBound + Math.random() * span;
-            const img = this.add.sprite(x, spawnY, 'gsprite', 1).setDepth(5);
+            const gKey = this.currentGhostTexKey();
+            const img = this.add.sprite(x, spawnY, gKey, 1).setDepth(5);
             img.setDisplaySize(CAR_WIDTH, CAR_HEIGHT);
-            img.play('gsprite-walk');
+            img.play(`${gKey}-walk`);
             const baseSpeed = 70 + this.level * 15 + i * 5;
             const vy = (Math.random() > 0.5 ? 1 : -1) * baseSpeed;
             const phase = Math.random() * Math.PI * 2;
@@ -734,9 +750,10 @@ export default function App() {
             const bottomBound = this.floorY(0);
             const span = Math.max(1, bottomBound - topBound);
             const spawnY = topBound + Math.random() * span;
-            const img = this.add.sprite(x, spawnY, 'gsprite', 1).setDepth(5);
+            const gKey = this.currentGhostTexKey();
+            const img = this.add.sprite(x, spawnY, gKey, 1).setDepth(5);
             img.setDisplaySize(CAR_WIDTH, CAR_HEIGHT);
-            img.play('gsprite-walk');
+            img.play(`${gKey}-walk`);
             const baseSpeed = 70 + this.level * 15 + i * 5;
             const vy = (Math.random() > 0.5 ? 1 : -1) * baseSpeed;
             const phase = Math.random() * Math.PI * 2;
