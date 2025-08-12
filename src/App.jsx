@@ -186,8 +186,8 @@ export default function App() {
         constructor() { super("GameScene"); }
         level = 1;
         floors = FLOORS_START;
-        currentFloorIndex = 0;
-  lives = 3;
+    currentFloorIndex = 0;
+  lives = 1;
         paused = false;
         paletteState = PALETTES[palette];
         reducedMotion = reducedMotion;
@@ -349,7 +349,7 @@ export default function App() {
 
         resetLevel(fresh = false) {
           if (fresh) {
-            this.level = 1; this.floors = FLOORS_START; this.lives = 3; this.stamina = 1; this.score = 0; this.updateScoreText?.();
+            this.level = 1; this.floors = FLOORS_START; this.lives = 1; this.stamina = 1; this.score = 0; this.updateScoreText?.();
             // Reset cryptogram progress on a fresh game start
             this.cryptUnlocked = 0;
             try { localStorage.removeItem('gg_cryptUnlocked'); } catch {}
