@@ -853,7 +853,12 @@ export default function App() {
                 msg.style.color = '#ffecec';
                 msg.style.textAlign = 'center';
                 msg.style.fontFamily = "'Permanent Marker', cursive";
-                  msg.innerHTML = `<div style="font-size:72px;color:#ff4d4d;text-shadow:0 3px 8px rgba(0,0,0,.6);">Thanks for playing!</div><div style="font-size:22px;margin-top:12px;color:#e6f2ff;">if you want to go again, just refresh the page</div>`;
+                  msg.innerHTML = `
+                    <div style="font-family:'Bangers','Permanent Marker',cursive;font-size:72px;color:#ff4d4d;text-shadow:0 3px 8px rgba(0,0,0,.6);">Thanks for playing!</div>
+                    <div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:22px;margin-top:12px;color:#e6f2ff;">
+                      if you want to go again, just refresh the page<p><p>Game desing & development<p>Murat Baturay
+                    </div>
+                  `;
                 parent.style.position = 'relative';
                 parent.appendChild(msg);
               }
